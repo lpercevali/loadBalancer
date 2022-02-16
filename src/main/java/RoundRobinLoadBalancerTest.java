@@ -42,7 +42,6 @@ public class RoundRobinLoadBalancerTest {
         System.out.println("Provider 2: " + roundRobinLoadBalancer.get());
 
 
-
         System.out.println("-------- RESETTING --------");
 
         System.out.println("Including Provider: " + providerThree.get());
@@ -64,8 +63,6 @@ public class RoundRobinLoadBalancerTest {
         System.out.println("Excluding Provider: " + providerThree.get());
         roundRobinLoadBalancer.exclude(providerThree);
         System.out.println("Provider error: " + roundRobinLoadBalancer.get());
-
-
 
     }
 }
