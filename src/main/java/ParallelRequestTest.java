@@ -8,8 +8,6 @@ public class ParallelRequestTest {
         final Provider providerTwo = new Provider();
         final Provider providerThree = new Provider();
 
-
-
         final ArrayList<Provider> providers = new ArrayList<>();
         providers.add(providerOne);
         providers.add(providerTwo);
@@ -18,7 +16,7 @@ public class ParallelRequestTest {
         final var roundRobinLoadBalancer = new LoadBalancerRoundRobin();
         roundRobinLoadBalancer.register(providers);
 
-        IntStream.range(0, 1000)
+        IntStream.range(0, 10000)
                 .parallel()
                 .forEach( i -> System.out.println(String.format(
                         "Client %d - Getting provider [%s]",

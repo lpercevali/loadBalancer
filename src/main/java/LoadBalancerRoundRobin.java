@@ -13,11 +13,9 @@ public class LoadBalancerRoundRobin extends LoadBalancerAbstract {
 
     @Override
     public String get() {
-        final var maxParallelRequests = getAvailableProviders().stream().findFirst().get().getMaxParallelRequests();
         final var size = getAvailableProviders().size();
-        final var requestNumber = requests.incrementAndGet();
-
-        if (requestNumber < maxParallelRequests * size) {
+        final var canUse = getSemaphore().tryAcquire();
+        if (canUse) {
             var providerIndex = roundRobin.getAndIncrement();
             if (providerIndex >= size) {
                 roundRobin.set(0);
@@ -25,10 +23,11 @@ public class LoadBalancerRoundRobin extends LoadBalancerAbstract {
             }
             if (size > 0) {
                 requests.getAndDecrement();
+                getSemaphore().release();
                 return getAvailableProviders().get(providerIndex).get();
             }
         }
-        final var decrement = requests.getAndDecrement();
-        return "No providers" + " | Requests: " + decrement;
+        getSemaphore().release();
+        return "No providers";
     }
 }

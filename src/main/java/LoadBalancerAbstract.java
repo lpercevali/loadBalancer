@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
 public abstract class LoadBalancerAbstract implements LoadBalancer {
@@ -8,6 +9,7 @@ public abstract class LoadBalancerAbstract implements LoadBalancer {
     final private long hearBeatSeconds = 5;
     private ArrayList<Provider> availableProviders;
     private ArrayList<Provider> providers;
+    private Semaphore semaphore;
 
     public LoadBalancerAbstract() {
         providers = new ArrayList<>(maxProviders);
@@ -19,19 +21,21 @@ public abstract class LoadBalancerAbstract implements LoadBalancer {
         if (providers.size() >= maxProviders) return;
         this.providers = providers;
         this.availableProviders = providers;
+        updateSemaphore(providers);
     }
 
     @Override
     public void exclude(final Provider provider) {
         this.providers.remove(provider);
         this.availableProviders.remove(provider);
+        updateSemaphore(providers);
     }
 
     @Override
     public void include(final Provider provider) {
         this.providers.add(provider);
         this.availableProviders.add(provider);
-
+        updateSemaphore(providers);
     }
 
     @Override
@@ -42,6 +46,10 @@ public abstract class LoadBalancerAbstract implements LoadBalancer {
 
     public List<Provider> getAvailableProviders() {
         return this.availableProviders;
+    }
+
+    private void updateSemaphore(final ArrayList<Provider> providers) {
+        this.semaphore = new Semaphore(availableProviders.size() * availableProviders.stream().findAny().get().getMaxParallelRequests());
     }
 
     private Runnable heartBeatRunnable() {
@@ -74,5 +82,9 @@ public abstract class LoadBalancerAbstract implements LoadBalancer {
                 }
             }
         };
+    }
+
+    public Semaphore getSemaphore() {
+        return semaphore;
     }
 }
