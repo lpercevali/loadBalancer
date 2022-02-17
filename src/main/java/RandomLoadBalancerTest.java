@@ -14,13 +14,17 @@ public class RandomLoadBalancerTest {
         providers.add(providerTwo);
         providers.add(providerThree);
 
+
         final var randomLoadBalancer = new LoadBalancerRandom();
+
 
         randomLoadBalancer.register(providers);
 
+        randomLoadBalancer.heartBeat();
+
         System.out.println("Getting random identifier from provider");
         System.out.println("Provider: " + randomLoadBalancer.get());
-        System.out.println("Registered Providers: " + randomLoadBalancer.getProviders().size());
+        System.out.println("Registered Providers: " + randomLoadBalancer.getAvailableProviders().size());
 
         System.out.println("Registering new provider");
         randomLoadBalancer.include(providerFour);
@@ -28,11 +32,10 @@ public class RandomLoadBalancerTest {
         System.out.println("Getting random identifier from provider");
         System.out.println("Provider: " + randomLoadBalancer.get());
 
-        System.out.println("Registered Providers: " + randomLoadBalancer.getProviders().size());
+        System.out.println("Registered Providers: " + randomLoadBalancer.getAvailableProviders().size());
 
         randomLoadBalancer.exclude(providerThree);
 
-        System.out.println("Registered Providers: " + randomLoadBalancer.getProviders().size());
-
+        System.out.println("Registered Providers: " + randomLoadBalancer.getAvailableProviders().size());
     }
 }

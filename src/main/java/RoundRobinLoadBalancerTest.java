@@ -17,7 +17,7 @@ public class RoundRobinLoadBalancerTest {
         final var roundRobinLoadBalancer = new LoadBalancerRoundRobin();
 
         roundRobinLoadBalancer.register(providers);
-        System.out.println("Registered Providers: " + roundRobinLoadBalancer.getProviders().size());
+        System.out.println("Registered Providers: " + roundRobinLoadBalancer.getAvailableProviders().size());
 
 
         System.out.println("Provider 1: " + roundRobinLoadBalancer.get());
@@ -36,7 +36,7 @@ public class RoundRobinLoadBalancerTest {
         System.out.println("-------- RESETTING --------");
 
         roundRobinLoadBalancer.exclude(providerThree);
-        System.out.println("Registered Providers: " + roundRobinLoadBalancer.getProviders().size());
+        System.out.println("Registered Providers: " + roundRobinLoadBalancer.getAvailableProviders().size());
 
         System.out.println("Provider 1: " + roundRobinLoadBalancer.get());
         System.out.println("Provider 2: " + roundRobinLoadBalancer.get());
@@ -46,7 +46,7 @@ public class RoundRobinLoadBalancerTest {
 
         System.out.println("Including Provider: " + providerThree.get());
         roundRobinLoadBalancer.include(providerThree);
-        System.out.println("Registered Providers: " + roundRobinLoadBalancer.getProviders().size());
+        System.out.println("Registered Providers: " + roundRobinLoadBalancer.getAvailableProviders().size());
 
         System.out.println("---------- AGAIN -----------");
 
